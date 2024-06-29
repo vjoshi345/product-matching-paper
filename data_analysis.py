@@ -84,3 +84,33 @@ print('Number of rows with missing manufacturer:', sum(pd.isnull(dfg['manufactur
 manufacturer_size = dfg.groupby(['manufacturer']).size()
 manufacturer_size.sort_values(ascending=False, inplace=True)
 print(manufacturer_size[0:5])
+
+# Read the mapping file and do sanity checks
+print('*'*80)
+print('Reading mapping file and doing sanity checks...')
+data_list = []
+with open(FILE_LINK, 'r') as f:
+    for line in csv.reader(f, quotechar='"', delimiter=',', quoting=csv.QUOTE_ALL, skipinitialspace=True):
+        data_list.append(line)
+print(len(data_list))
+print(data_list[10])
+
+cols = data_list[0]
+data_list.pop(0)
+
+dfl = pd.DataFrame(data_list, columns=cols)
+print(dfl.shape)
+print(dfl.dtypes)
+
+print('**** Checking each column ****')
+print('Number of unique values for idAmazon:', dfl['idAmazon'].nunique())
+print('Number of rows with missing idAmazon:', sum(pd.isnull(dfl['idAmazon']) | dfl['idAmazon'].isin([''])))
+idAmazon_size = dfl.groupby(['idAmazon']).size()
+idAmazon_size.sort_values(ascending=False, inplace=True)
+print(idAmazon_size[0:5])
+
+print('\nNumber of unique values for idGoogleBase:', dfl['idGoogleBase'].nunique())
+print('\nNumber of rows with missing idGoogleBase:', sum(pd.isnull(dfl['idGoogleBase']) | dfl['idGoogleBase'].isin([''])))
+idGoogleBase_size = dfl.groupby(['idGoogleBase']).size()
+idGoogleBase_size.sort_values(ascending=False, inplace=True)
+print(idGoogleBase_size[0:5])
