@@ -2,9 +2,9 @@ import csv
 import recordlinkage
 import pandas as pd
 
-FILE_AMAZON = 'data/Amazon.csv'
-FILE_GOOGLE = 'data/GoogleProducts.csv'
-FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping.csv'
+FILE_AMAZON = 'data/Amazon_preprocessed.csv'
+FILE_GOOGLE = 'data/GoogleProducts_preprocessed.csv'
+FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
 
 # Read Amazon file and store in a pandas df
 print('*'*80)
