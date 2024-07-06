@@ -20,6 +20,7 @@ data_list.pop(0)
 
 dfA = pd.DataFrame(data_list, columns=cols)
 dfA.set_index(keys=['id'], drop=True, inplace=True, verify_integrity=True)
+dfA['desc_100'] = [desc[:100] for desc in dfA['description']]
 print(dfA.shape)
 print(dfA.dtypes)
 
@@ -37,6 +38,7 @@ data_list.pop(0)
 
 dfB = pd.DataFrame(data_list, columns=cols)
 dfB.set_index(keys=['id'], drop=True, inplace=True, verify_integrity=True)
+dfB['desc_100'] = [desc[:100] for desc in dfB['description']]
 print(dfB.shape)
 print(dfB.dtypes)
 
@@ -71,7 +73,8 @@ print("Total number of record pairs:", len(candidate_links))
 print('Fuzzy match on title, description, manufacturer, and price...')
 compare_cl = recordlinkage.Compare(n_jobs=-1)
 compare_cl.string("title", "name", method='jarowinkler', threshold=0.95, label="title")
-compare_cl.string("description", "description", method='jarowinkler', threshold=0.95, label="description")
+# compare_cl.string("description", "description", method='jarowinkler', threshold=0.95, label="description")
+compare_cl.string("desc_100", "desc_100", method='jarowinkler', threshold=0.95, label="desc_100")
 compare_cl.string("manufacturer", "manufacturer", method='jarowinkler', threshold=0.95, label="manufacturer")
 compare_cl.string("price", "price", method='jarowinkler', threshold=0.95, label="price")
 
@@ -79,7 +82,8 @@ features = compare_cl.compute(candidate_links, dfA, dfB)
 
 print('\nDistribution of records matching on all columns')
 print(features.sum(axis=1).value_counts().sort_index(ascending=False))
-features['sum_title_desc_manu'] = features['title'] + features['description'] + features['manufacturer']
+# features['sum_title_desc_manu'] = features['title'] + features['description'] + features['manufacturer']
+features['sum_title_desc_manu'] = features['title'] + features['desc_100'] + features['manufacturer']
 print(features.shape)
 print(features.dtypes)
 print(features.head())
