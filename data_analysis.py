@@ -23,6 +23,7 @@ data_list.pop(0)
 
 dfa = pd.DataFrame(data_list, columns=cols)
 print(dfa.shape)
+dfa['price'] = [''.join(list(filter(lambda x: x in '.0123456789', price))) for price in dfa['price']]
 dfa['price'] = dfa['price'].astype(float)
 print(dfa.dtypes)
 
@@ -67,6 +68,8 @@ cols = data_list[0]
 data_list.pop(0)
 
 dfg = pd.DataFrame(data_list, columns=cols)
+dfg['price'] = [''.join(list(filter(lambda x: x in '.0123456789', price))) for price in dfg['price']]
+dfg['price'] = dfg['price'].astype(float)
 print(dfg.shape)
 print(dfg.dtypes)
 
