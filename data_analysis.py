@@ -4,6 +4,9 @@ import pandas as pd
 FILE_AMAZON = 'data/Amazon.csv'
 FILE_GOOGLE = 'data/GoogleProducts.csv'
 FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping.csv'
+FILE_AMAZON_PP = 'data/Amazon_preprocessed.csv'
+FILE_GOOGLE_PP = 'data/GoogleProducts_preprocessed.csv'
+FILE_LINK_PP = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
 
 # Read Amazon file and do sanity checks
 print('*'*80)
@@ -45,6 +48,10 @@ manufacturer_size = dfa.groupby(['manufacturer']).size()
 manufacturer_size.sort_values(ascending=False, inplace=True)
 print(manufacturer_size[0:5])
 
+dfa_unique = dfa.drop_duplicates(subset=['title', 'description', 'manufacturer', 'price'], inplace=False)
+print('\nNumber of unique rows:', dfa_unique.shape)
+print('Writing the de-duplicated file to csv:', FILE_AMAZON_PP)
+dfa_unique.to_csv(FILE_AMAZON_PP, index=False, sep=',', quoting=csv.QUOTE_ALL, quotechar='"')
 
 # Read Google file and do sanity checks
 print('*'*80)
@@ -85,6 +92,11 @@ manufacturer_size = dfg.groupby(['manufacturer']).size()
 manufacturer_size.sort_values(ascending=False, inplace=True)
 print(manufacturer_size[0:5])
 
+dfg_unique = dfg.drop_duplicates(subset=['name', 'description', 'manufacturer', 'price'], inplace=False)
+print('\nNumber of unique rows:', dfg_unique.shape)
+print('Writing the de-duplicated file to csv:', FILE_GOOGLE_PP)
+dfg_unique.to_csv(FILE_GOOGLE_PP, index=False, sep=',', quoting=csv.QUOTE_ALL, quotechar='"')
+
 # Read the mapping file and do sanity checks
 print('*'*80)
 print('Reading mapping file and doing sanity checks...')
@@ -114,3 +126,10 @@ print('\nNumber of rows with missing idGoogleBase:', sum(pd.isnull(dfl['idGoogle
 idGoogleBase_size = dfl.groupby(['idGoogleBase']).size()
 idGoogleBase_size.sort_values(ascending=False, inplace=True)
 print(idGoogleBase_size[0:5])
+
+dfl_unique = dfl.drop_duplicates(subset=['idAmazon', 'idGoogleBase'], inplace=False)
+dfl_unique = dfl_unique.loc[dfl_unique['idAmazon'].isin(dfa_unique['id']), :]
+dfl_unique = dfl_unique.loc[dfl_unique['idGoogleBase'].isin(dfg_unique['id']), :]
+print('\nNumber of unique rows:', dfl_unique.shape)
+print('Writing the de-duplicated file to csv:', FILE_LINK_PP)
+dfl_unique.to_csv(FILE_LINK_PP, index=False, sep=',', quoting=csv.QUOTE_ALL, quotechar='"')
