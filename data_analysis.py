@@ -1,5 +1,6 @@
 import csv
 import pandas as pd
+from collections import Counter
 
 FILE_AMAZON = 'data/Amazon.csv'
 FILE_GOOGLE = 'data/GoogleProducts.csv'
@@ -7,6 +8,9 @@ FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping.csv'
 FILE_AMAZON_PP = 'data/Amazon_preprocessed.csv'
 FILE_GOOGLE_PP = 'data/GoogleProducts_preprocessed.csv'
 FILE_LINK_PP = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
+
+# https://www.macrotrends.net/2549/pound-dollar-exchange-rate-historical-chart
+GBP_TO_USD_AVG_2010 = 1.55
 
 # Read Amazon file and do sanity checks
 print('*'*80)
@@ -68,8 +72,15 @@ cols = data_list[0]
 data_list.pop(0)
 
 dfg = pd.DataFrame(data_list, columns=cols)
-dfg['price'] = [''.join(list(filter(lambda x: x in '.0123456789', price))) for price in dfg['price']]
-dfg['price'] = dfg['price'].astype(float)
+
+# Convert GBP to USD and preprocess price column
+print('**** Preprocessing price column (only for Google dataset) ****')
+currency_list = [''.join(list(filter(lambda x: x not in '.0123456789', price))).strip() for price in dfg['price']]
+print('Distribution of currency types in the Google dataset:', Counter(currency_list))
+
+price_list = [float(''.join(list(filter(lambda x: x in '.0123456789', price))).strip()) for price in dfg['price']]
+mod_price_list = [p*GBP_TO_USD_AVG_2010 if c == 'gbp' else p for p, c in zip(price_list, currency_list)]
+dfg['price'] = mod_price_list
 print(dfg.shape)
 print(dfg.dtypes)
 
