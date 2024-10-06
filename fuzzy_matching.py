@@ -2,8 +2,14 @@ import csv
 import recordlinkage
 import pandas as pd
 
-FILE_AMAZON = 'data/Amazon_preprocessed.csv'
-FILE_GOOGLE = 'data/GoogleProducts_preprocessed.csv'
+# Files without nlp preprocessing
+# FILE_AMAZON = 'data/Amazon_preprocessed.csv'
+# FILE_GOOGLE = 'data/GoogleProducts_preprocessed.csv'
+# FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
+
+# Files with nlp preprocessing
+FILE_AMAZON = 'data/Amazon_lower_stopwords_lemmatized.csv'
+FILE_GOOGLE = 'data/GoogleProducts_lower_stopwords_lemmatized.csv'
 FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
 
 # Read Amazon file and store in a pandas df
