@@ -2,9 +2,15 @@ import csv
 import recordlinkage
 import pandas as pd
 
-FILE_AMAZON = 'data/Amazon.csv'
-FILE_GOOGLE = 'data/GoogleProducts.csv'
-FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping.csv'
+# Files without nlp preprocessing
+# FILE_AMAZON = 'data/Amazon_preprocessed.csv'
+# FILE_GOOGLE = 'data/GoogleProducts_preprocessed.csv'
+# FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
+
+# Files with nlp preprocessing
+FILE_AMAZON = 'data/Amazon_lower_stopwords_lemmatized.csv'
+FILE_GOOGLE = 'data/GoogleProducts_lower_stopwords_lemmatized.csv'
+FILE_LINK = 'data/Amazon_GoogleProducts_perfectMapping_preprocessed.csv'
 
 # Read Amazon file and store in a pandas df
 print('*'*80)
@@ -87,7 +93,7 @@ print(features.head())
 # Classification step
 print('*'*80)
 print('Classification and evaluation for off by k matching...')
-for match_col in [1, 2]:
+for match_col in [1, 2, 3, 4]:
     print(f'Link if at least {match_col} matching columns:')
     matches = features[features['sum_col_match'] >= match_col]
     print(matches.shape)
